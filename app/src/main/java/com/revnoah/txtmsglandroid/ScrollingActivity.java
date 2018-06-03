@@ -68,30 +68,30 @@ public class ScrollingActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Intent myIntent = new Intent(ScrollingActivity.this, SmsActivity.class);
-                //myIntent.putExtra("key", value); //Optional parameters
-                //ScrollingActivity.this.startActivity(myIntent);
+            //Intent myIntent = new Intent(ScrollingActivity.this, SmsActivity.class);
+            //myIntent.putExtra("key", value); //Optional parameters
+            //ScrollingActivity.this.startActivity(myIntent);
 
-                String wifiName = getWifiName(getBaseContext());
+            String wifiName = getWifiName(getBaseContext());
 
-                Snackbar.make(view, "Connected to: " + wifiName, Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            Snackbar.make(view, "Connected to: " + wifiName, Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
 
-                SendMessageAsyncTask task = new SendMessageAsyncTask();
-                String messageText = "This is a test message";
+            SendMessageAsyncTask task = new SendMessageAsyncTask();
+            String messageText = "This is a test message";
 
-                HashMap<String, String> params = new HashMap<>();
-                params.put("task", "messages");
-                params.put("path", "messages");
-                params.put("type", "sent");
-                params.put("status", "draft");
-                params.put("address", "123456");
-                params.put("message", messageText);
-                params.put("server", getServerUrl());
-                params.put("username", getUsername());
-                params.put("password", getPassword());
+            HashMap<String, String> params = new HashMap<>();
+            params.put("task", "messages");
+            params.put("path", "messages");
+            params.put("type", "sent");
+            params.put("status", "draft");
+            params.put("address", "123456");
+            params.put("message", messageText);
+            params.put("server", getServerUrl());
+            params.put("username", getUsername());
+            params.put("password", getPassword());
 
-                task.execute(params);
+            task.execute(params);
             }
         });
     }
@@ -120,8 +120,18 @@ public class ScrollingActivity extends AppCompatActivity {
         } else if(id == R.id.action_about) {
             Intent aboutIntent = new Intent(ScrollingActivity.this, AboutActivity.class);
             ScrollingActivity.this.startActivity(aboutIntent);
+
+            return true;
         } else if(id == R.id.action_refresh) {
             SendMessageAsyncTask task = new SendMessageAsyncTask();
+
+            HashMap<String, String> params = new HashMap<>();
+            params.put("task", "refresh");
+            params.put("path", "poll");
+
+            task.execute(params);
+
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

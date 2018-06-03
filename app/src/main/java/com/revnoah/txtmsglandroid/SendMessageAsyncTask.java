@@ -70,12 +70,22 @@ class SendMessageAsyncTask extends AsyncTask<HashMap<String, String>, Void, JSON
         JSONObject jsonResponse = null;
         boolean firstRun = true;
 
+        //update token
         do {
             firstRun = !(refreshAccessToken(params[0]));
         } while (firstRun);
 
         //send message using params passed into task
-        sendMessage(params[0]);
+        String task = params[0].get("task");
+        switch(task) {
+            case "refresh":
+                JSONObject lastMessage = refreshMessages();
+                break;
+            case "messages":
+            default:
+                sendMessage(params[0]);
+                break;
+        }
 
         return jsonResponse;
     }
@@ -167,6 +177,23 @@ class SendMessageAsyncTask extends AsyncTask<HashMap<String, String>, Void, JSON
         return conn;
     }
 
+    private int sendQuery(HttpURLConnection conn) {
+        int responseCode = 500;
+
+        try {
+            //get three digit http response code
+            responseCode = conn.getResponseCode();
+
+            return responseCode;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return responseCode;
+    }
+
     private int sendQuery(HttpURLConnection conn, String query) {
         int responseCode = 500;
 
@@ -215,6 +242,15 @@ class SendMessageAsyncTask extends AsyncTask<HashMap<String, String>, Void, JSON
         return jsonResponse;
     }
 
+    private boolean responseCodeSuccess(int responseCode) {
+        if(Math.floor(responseCode / 100) == 2) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
     public JSONObject sendMessage(HashMap<String, String> params)
     {
         JSONObject jsonResponse = null;
@@ -231,8 +267,8 @@ class SendMessageAsyncTask extends AsyncTask<HashMap<String, String>, Void, JSON
             //set values
             String messageType = params.get("type") != null ? params.get("type") : "sent";
             String messageStatus = params.get("status") != null ? params.get("status") : "draft";
-            String messageText = params.get("message") != null ? params.get("message") : "test message";
-            String senderAddress = params.get("address") != null ? params.get("address") : null;
+            String messageText = params.get("message");
+            String senderAddress = params.get("address");
 
             //content params
             Uri.Builder builder = new Uri.Builder()
@@ -246,11 +282,8 @@ class SendMessageAsyncTask extends AsyncTask<HashMap<String, String>, Void, JSON
             int responseCode = sendQuery(conn, query);
 
             //2xx successful response code
-            if(Math.floor(responseCode / 100) == 2) {
+            if(responseCodeSuccess(responseCode)) {
                 jsonResponse = getResponseJSON(conn);
-            } else {
-                //clear access token to trigger next request
-                setAccessToken(null);
             }
 
             conn.connect();
@@ -280,7 +313,7 @@ class SendMessageAsyncTask extends AsyncTask<HashMap<String, String>, Void, JSON
             int responseCode = sendQuery(conn, query);
 
             //2xx successful response code
-            if(Math.floor(responseCode / 100) == 2) {
+            if(responseCodeSuccess(responseCode)) {
                 jsonResponse = getResponseJSON(conn);
                 String token = jsonResponse.getString("access_token");
                 setAccessToken(token);
@@ -311,7 +344,7 @@ class SendMessageAsyncTask extends AsyncTask<HashMap<String, String>, Void, JSON
             int responseCode = sendQuery(conn, query);
 
             //2xx successful response code
-            if (Math.floor(responseCode / 100) == 2) {
+            if(responseCodeSuccess(responseCode)) {
                 jsonResponse = getResponseJSON(conn);
                 String token = jsonResponse.getString("access_token");
                 setAccessToken(token);
@@ -328,4 +361,33 @@ class SendMessageAsyncTask extends AsyncTask<HashMap<String, String>, Void, JSON
 
         return jsonResponse;
     }
+
+    //refresh messages and return status
+    public JSONObject refreshMessages()
+    {
+        JSONObject jsonResponse = null;
+
+        try {
+            HttpURLConnection conn = getConnection("poll");
+
+            //send query and get response code, can omit empty query
+            int responseCode = sendQuery(conn);
+
+            //2xx successful response code
+            if(responseCodeSuccess(responseCode)) {
+                jsonResponse = getResponseJSON(conn);
+            }
+
+            conn.connect();
+        } catch (IOException e) {
+            e.printStackTrace();
+        //} catch (JSONException e) {
+        //    e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return jsonResponse;
+    }
+
 }
