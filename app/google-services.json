@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1034307030270",
+    "firebase_url": "https://txtmsglan.firebaseio.com",
+    "project_id": "txtmsglan",
+    "storage_bucket": "txtmsglan.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1034307030270:android:36f9f054dd00e68a",
+        "android_client_info": {
+          "package_name": "com.revnoah.txtmsglandroid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1034307030270-bla3tqa4lpo95u0aupja5eu9e0439io5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB76GXeKvXeTVVj6UVGCPitNU3Hp7DQ_6Y"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

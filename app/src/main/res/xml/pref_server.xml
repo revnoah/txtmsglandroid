@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <EditTextPreference
+        android:capitalize="words"
+        android:defaultValue="@string/pref_server_network_name"
+        android:inputType="text"
+        android:key="server_network_name"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/pref_server_network_name" />
+
+    <EditTextPreference
+        android:capitalize="words"
+        android:defaultValue="@string/pref_server_address"
+        android:inputType="text"
+        android:key="server_address"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/pref_server_address" />
+
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="server_connect_automatically"
+        android:title="@string/pref_server_connect_automatically" />
+
+</PreferenceScreen>
