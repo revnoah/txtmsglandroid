@@ -42,13 +42,7 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
         this.serverUrl = serverUrl;
     }
 
-    public SmsBroadcastReceiver(Context mContext) {
-
-        //read connection preferences and set variables
-        sharedPref = android.preference.PreferenceManager.getDefaultSharedPreferences(mContext.getApplicationContext());
-        setUsername(sharedPref.getString("general_username", ""));
-        setPassword(sharedPref.getString("general_password", ""));
-        setServerUrl(sharedPref.getString("server_address", "http://192.168.1.104/txtmsglanapi/public/api/"));
+    public SmsBroadcastReceiver() {
 
     }
 
@@ -65,6 +59,12 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
                 smsMessageStr += smsMessage.getMessageBody().toString();
             }
             Toast.makeText(context, "From " + smsSenderAddress + " " + smsMessageStr, Toast.LENGTH_SHORT).show();
+
+            //read connection preferences and set variables
+            sharedPref = android.preference.PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+            setUsername(sharedPref.getString("general_username", ""));
+            setPassword(sharedPref.getString("general_password", ""));
+            setServerUrl(sharedPref.getString("server_address", "http://192.168.1.104/txtmsglanapi/public/api/"));
 
             SendMessageAsyncTask task = new SendMessageAsyncTask();
 
